@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<head>
+<meta http-equiv="refresh"
+content="${session.maxInactiveInterval};url=#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/index.jsp"
+/>
+<title>RebateAccess</title>
+	<!--
+	<script src="${facesContext.externalContext.requestContextPath}/javascript/jquery.js"></script>
+    <script src="${facesContext.externalContext.requestContextPath}/javascript/core.js"></script>
+  	 -->
+    <link rel="STYLESHEET" type="text/css" href="https://fonts.googleapis.com/css?family=Oswald|Open+Sans" />
+    <link rel="STYLESHEET" type="text/css" href="${facesContext.externalContext.requestContextPath}/css/rwwstyle.css" /> 
+    <link rel="STYLESHEET" type="text/css" href="${facesContext.externalContext.requestContextPath}/css/base.css" />
+    <link rel="STYLESHEET" type="text/css" href="${facesContext.externalContext.requestContextPath}/css/responsive.css"  />
+    
+    <link rel="STYLESHEET" type="text/css" href="${facesContext.externalContext.requestContextPath}/css/responsive.css" />
+    <link rel="STYLESHEET" type="text/css" href="${facesContext.externalContext.requestContextPath}/css/supplemental.css" />
+	  <style type="text/css">
+		button[type="button"], button[type="reset"], button[type="submit"], input[type="reset"], input[type="submit"], input[type="button"] {
+			border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+			font-size: 14px;
+			font-family: 'Open Sans', Arial, sans-serif;
+			color: #ffffff;
+			background-color: #2F5FAC;
+			background-image: linear-gradient(to bottom, #4386F0, #2F5FAC);
+		}
+    </style>
+	<a4j:loadScript src="resource://jquery.js"/>
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="${facesContext.externalContext.requestContextPath}/css/favicon.ico" type="image/x-icon" />
+
+
+</head>
+<body>
+<div id="headerdoc">
+<ui:insert name="rheader">
+	<!-- <ui:include src="/template/rwwheader.xhtml" />-->
+	<ui:include src="/template/rwwheader.xhtml" />
+</ui:insert>
+</div>
+
+<div id="container">
+
+<div id="content">
+
+<ui:insert name="rcontent">
+
+
+	<table style="height:300px;">
+	</table>
+	<h1>Content goes here</h1>
+	<table style="height:300px;">
+	</table>
+
+
+</ui:insert>
+
+</div>
+
+</div>
+
+<ui:insert name="rfooter">
+<ui:include src="/template/rwwfooter.xhtml" />
+</ui:insert>
+
+
+
+    <script> /* ----------- GOOGLE ANALYTICS CODE -------------*/
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-43052518-1', 'apps.realwinwin.com');
+      ga('send', 'pageview');
+    </script>
+
+
+	 
+</body>
+   
+</html>

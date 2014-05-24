@@ -1,0 +1,435 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition>
+
+
+
+ <h:form>
+
+<rich:panel>
+<rich:spacer height="30"></rich:spacer>
+<h:outputText value="#{userBean.loginemp.employeetypedesc} Rebate Submittal Form" styleClass="headertextclass" />
+<rich:spacer height="25"></rich:spacer>
+</rich:panel>
+
+<rich:panel>
+<h:outputText value="#{sbtprj.requiredfieldslabel}"
+	styleClass="errmsgclass" />
+<rich:spacer height="25"></rich:spacer>
+</rich:panel>
+
+<!-- 
+<table>
+<tr>
+<td>
+	<h:panelGrid columns="2">
+ 		<h:outputText value="#{sbtprj.submitedby}" />
+ 		<h:outputText value="#{projectManager.loginuserinfo.empname}" />
+ 		<h:outputText value="#{sbtprj.companyname}" />
+ 		<h:outputText value="#{projectManager.loginuserinfo.employeetypedesc}" />
+ 		<h:outputText value="#{sbtprj.phone}" />
+ 		<h:outputText value="#{projectManager.loginuserinfo.empphone}" />
+ 		<h:outputText value="#{sbtprj.email}" />
+ 		<h:outputText value="#{projectManager.loginuserinfo.empemail}" />
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<h:outputText value="#{sbtprj.clientname}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitename}" />
+ 		<h:outputText value="#{sbtprj.address}" />
+ 		<h:inputText value="#{projectManager.projectreq.siteaddress}" />
+ 		<h:outputText value="#{sbtprj.city}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitecity}" />
+ 		<h:outputText value="#{sbtprj.state}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitestate}" />
+ 		<h:outputText value="#{sbtprj.zip}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitezip}">
+ 			<a4j:support event="onchange"
+ 				action="#{submitProject.ZipCodeChanged()}"
+ 				reRender="siteutility">
+ 			</a4j:support>
+ 		</h:inputText>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<h:outputText value="#{sbtprj.electricutility}" />
+ 		<rich:comboBox value="#{projectManager.projectreq.siteelectricutility}"
+ 			id="siteutility">
+ 			<f:selectItems value="#{utilityManager.utilitybyzipcombo}"/>
+ 		</rich:comboBox>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<h:outputText value="#{sbtprj.buildingtype}" />
+ 		<rich:comboBox value="#{projectManager.projectreq.sitebuildingtype}">
+ 			<f:selectItems value="#{buildingTypesManager.buildingTypesCombo}"/>
+ 		</rich:comboBox>
+ 		<h:outputText value="#{sbtprj.buildingsqft}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitesqft}" />
+ 		<h:outputText value="#{sbtprj.operatinghours}" />
+ 		<h:inputText value="#{projectManager.projectreq.siteoperatinghours}" />
+ 	</h:panelGrid>
+</td>
+
+
+<td>
+	<h:panelGrid columns="2">
+ 		<h:outputText value="#{sbtprj.projecttype}"  />
+ 		<rich:comboBox value="#{projectManager.projectreq.siteprojectype}"
+ 			width="250">
+ 			<f:selectItems value="#{projectTypesManager.projectTypesCombo}"/>
+ 		</rich:comboBox>
+ 	</h:panelGrid>
+ 	<rich:spacer height="5"></rich:spacer>
+ 	
+ 	<rich:comboBox valueChangeListener = "#{submitProject.modelSelectionChanged()}"
+ 				id="modelcombo">
+ 				<f:selectItems value="#{projectManager.modelnumbercombo}"/>
+ 				<a4j:support event="onchange" >
+ 				</a4j:support>
+ 			</rich:comboBox>
+ 	
+ 	<rich:dataTable value="#{projectManager.projectreq.equipments}"
+ 		var="eqitems"
+ 		id="eqtable"
+ 		binding="#{projectManager.equipmenttable}">
+ 		
+ 		<f:facet name="header">
+ 			<h:outputText value="Unit(s)" />
+ 		</f:facet>
+ 		
+ 		<rich:column>
+ 			<f:facet name="header">
+ 				<h:outputText value="Unit" />
+ 			</f:facet>
+ 			<rich:comboBox value="#{eqitems.modelnumber}"
+ 				valueChangeListener = "#{submitProject.modelSelectionChanged()}"
+ 				id="modelcombo">
+ 				
+ 				<f:selectItems value="#{projectManager.modelnumbercombo}"/>
+ 				<a4j:support event="onchange" reRender= "hp,temp">
+ 				</a4j:support>
+ 			</rich:comboBox>
+ 		</rich:column>
+ 		 
+ 		<rich:column>
+ 			<f:facet name="header">
+ 				<h:outputText value="HP" />
+ 			</f:facet>
+ 			<h:outputText value="#{eqitems.hoursepower}"
+ 				id="hp" />
+ 		</rich:column>
+ 		<rich:column>
+ 			<f:facet name="header">
+ 				<h:outputText value="Temp" />
+ 			</f:facet>
+ 			<h:outputText value="#{eqitems.temperature}" 
+ 				id="temp" />
+ 		</rich:column>
+ 		 
+ 		 
+ 		<rich:column>
+ 			<f:facet name="header">
+ 				<h:outputText value="Replacing" />
+ 			</f:facet>
+ 			<rich:comboBox value="#{eqitems.replacingequipment}">
+ 				<f:selectItems value="#{replacingEquipmentManager.replacementEquipmentCombo}"/>
+ 			</rich:comboBox>
+ 		</rich:column>
+ 	</rich:dataTable>
+ 	
+ 	<h:panelGrid columns="2">
+ 		<a4j:commandButton value="Add New Unit(s)"
+ 			action="#{submitProject.AddEquipment()}"
+ 			reRender="eqtable">
+ 		</a4j:commandButton>
+ 		<a4j:commandButton value="Clear Units(s)"
+ 			action="#{submitProject.ClearEquipment()}"
+ 			reRender="eqtable">
+ 		</a4j:commandButton>
+ 	</h:panelGrid>
+ 	
+ 	<rich:spacer height="10"></rich:spacer>
+ 	
+ 	<h:panelGrid columns="2">
+ 	<h:outputText value="#{sbtprj.targetinstall}" />
+ 	<rich:calendar value="#{projectManager.projectreq.targetinstal}"></rich:calendar>
+ 	<h:outputText value="#{sbtprj.summaryscope}" />
+ 	<h:inputTextarea value="#{projectManager.projectreq.summaryscope}" />
+ 	<h:outputText value="#{sbtprj.additionalnotes}" />
+ 	<h:inputTextarea value="#{projectManager.projectreq.additionalnotes}" />
+ 	</h:panelGrid>
+</td>
+</tr>
+</table>
+  -->
+  
+ <rich:messages styleClass="errmsgclass"></rich:messages>
+ <rich:spacer height="2"></rich:spacer>
+ <h:outputText value="#{submitProject.missingrequired}"
+ 	id="requiredflds"
+ 	styleClass="errmsgclass" />
+ 
+ <h:panelGrid columns="2" id="maingrid"
+ 	columnClasses="panelgridtopalignclass,
+		panelgridtopalignclass">
+		
+ <rich:panel width="300">
+ 	<f:facet name="header">
+ 		<h:outputText value="#{sbtprj.facilityinformationsectionheader}" />
+ 	</f:facet>
+ 	<h:panelGrid columns="2">
+ 		<h:outputText value="#{sbtprj.submitedby}" />
+ 		<h:outputText value="#{userBean.loginemp.empname}" />
+ 		<h:outputText value="#{sbtprj.companyname}" />
+ 		<h:outputText value="#{userBean.loginemp.employeetypedesc}" />
+ 		<h:outputText value="#{sbtprj.phone}" />
+ 		<h:outputText value="#{userBean.loginemp.empphone}" />
+ 		<h:outputText value="#{sbtprj.email}" />
+ 		<h:outputText value="#{userBean.loginemp.empemail}" />
+ 		<h:outputText value="#{sbtprj.projectcontactname}" />
+ 		<rich:comboBox value="#{projectManager.projectreq.projectcontactname}"> 
+ 			<f:selectItems value="#{employeeManager.vendorempcombo}"/>
+ 		</rich:comboBox>
+ 		<h:outputText value="#{sbtprj.installingcontractorname}" />
+ 		<h:inputText value="#{projectManager.projectreq.installingcontractorname}">
+ 			<f:validateLength maximum="#{sbtprj.namemaxlength}"></f:validateLength>
+ 			<f:validator validatorId="AlphaNumericValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.installingcontractoremail}" />
+ 		<h:inputText value="#{projectManager.projectreq.installingcontractoremail}">
+ 			<f:validateLength maximum="#{sbtprj.emailmaxlength}"></f:validateLength>
+ 			<f:validator validatorId="EmailValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.installingcontractorphone}" />
+ 		<h:inputText value="#{projectManager.projectreq.installingcontractorphone}">
+ 			<f:validateLength maximum="#{sbtprj.phonemaxlength}"></f:validateLength>
+ 			<f:validator validatorId="AlphaNumericValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.buildingownername}" />
+ 		<h:inputText value="#{projectManager.projectreq.buildingownername}">
+ 			<f:validateLength maximum="#{sbtprj.namemaxlength}"></f:validateLength>
+ 			<f:validator validatorId="AlphaNumericValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.buildingowneremail}" />
+ 		<h:inputText value="#{projectManager.projectreq.buildingowneremail}">
+ 			<f:validateLength maximum="#{sbtprj.emailmaxlength}"></f:validateLength>
+ 			<f:validator validatorId="EmailValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.buildingownerphone}" />
+ 		<h:inputText value="#{projectManager.projectreq.buildingownerphone}">
+ 			<f:validateLength maximum="#{sbtprj.phonemaxlength}"></f:validateLength>
+ 			<f:validator validatorId="AlphaNumericValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<h:outputText value="#{sbtprj.projectname}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitename}" 
+ 			required="true"
+ 			requiredMessage="#{sbtprj.projectnamerequiredmsg}"
+ 			validatorMessage="#{sbtprj.projectnamevalidatormsg}">
+ 			<f:validateLength maximum="#{sbtprj.projectnamemaxlength}"></f:validateLength>
+ 			<f:validator validatorId="AlphaNumericValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.address}" />
+ 		<h:inputText value="#{projectManager.projectreq.siteaddress}"
+ 			validatorMessage="#{sbtprj.addressvalidatormsg}" >
+ 			<f:validateLength maximum="#{sbtprj.addressmaxlength}"></f:validateLength>
+ 			<f:validator validatorId="AlphaNumericValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.city}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitecity}"
+ 			required="true"
+ 			requiredMessage="#{sbtprj.cityrequiredmsg}"
+ 			validatorMessage="#{sbtprj.cityvalidatormsg}" >
+ 			<f:validateLength maximum="#{sbtprj.citymaxlength}"></f:validateLength>
+ 			<f:validator validatorId="AlphaNumericValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.state}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitestate}"
+ 			required="true"
+ 			requriedMessage="#{sbtprj.staterequiredmsg}"
+ 			validatorMessage="#{sbtprj.statevalidatormsg}" >
+ 			<f:validateLength maximum="#{sbtprj.statemaxlength}"></f:validateLength>
+ 			<f:validator validatorId="AlphaNumericValidator"/>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.zip}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitezip}"
+ 			required="true"
+ 			requiredMessage="#{sbtprj.ziprequiredmsg}"
+ 			validatorMessage="#{sbtprj.zipvalidatormsg}">
+ 			<f:validateLength maximum="#{sbtprj.zipmaxlength}"></f:validateLength>
+ 			<f:validator validatorId="ZipCodeValidator" />
+ 			<f:attribute name="plus4Required" value="#{sbtprj.zipcodeplus4required}"/> 
+ 			<a4j:support event="onchange"
+ 				action="#{submitProject.ZipCodeChanged()}"
+ 				reRender="siteutility,confirmationpanel,siteutilitylabel">
+ 			</a4j:support>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<h:outputText value="#{sbtprj.electricutilitylabelnotrequired}#{(utilityManager.utilitybyzipcombo.size()) gt 0 ? '*' : ''}" 
+ 			id="siteutilitylabel"/>
+ 		<rich:comboBox value="#{projectManager.projectreq.siteelectricutility}"
+ 			id="siteutility">
+ 			<f:selectItems value="#{utilityManager.utilitybyzipcombo}"/>
+ 		</rich:comboBox>
+ 		<h:outputText value="#{sbtprj.utilityknown}" />
+ 		<h:selectBooleanCheckbox value="#{projectManager.projectreq.utilityknown}"
+ 			styleClass="checkboxclass">
+ 		</h:selectBooleanCheckbox>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<rich:spacer height="5"></rich:spacer>
+ 		<h:outputText value="#{sbtprj.buildingtype}" />
+ 		<rich:comboBox value="#{projectManager.projectreq.sitebuildingtype}">
+ 			<f:selectItems value="#{buildingTypesManager.buildingTypesCombo}"/>
+ 		</rich:comboBox>
+ 		<h:outputText value="#{sbtprj.buildingsqft}" />
+ 		<h:inputText value="#{projectManager.projectreq.sitesqft}"
+ 			converterMessage="#{sbtprj.buildingsqftconvertermsg}"
+ 			validatorMessage="#{sbtprj.buildingsqftconvertermsg}" >
+ 			<f:convertNumber pattern="#{sbtprj.buildingsqftconvertpattern}"/>
+ 			<f:validateDoubleRange minimum="#{sbtprj.buildingsqftminimum}">
+ 			</f:validateDoubleRange>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 		<h:outputText value="#{sbtprj.operatinghours}" />
+ 		<h:inputText value="#{projectManager.projectreq.siteoperatinghours}"
+ 			converterMessage="#{sbtprj.operatinghoursconvertermsg}"
+ 			validatorMessage="#{sbtprj.operatinghoursconvertermsg}" >
+ 			<f:convertNumber pattern="#{sbtprj.operatinghourconvertpattern}"/>
+ 			<f:validateDoubleRange minimum="#{sbtprj.operationhoursminimum}"></f:validateDoubleRange>
+ 			<rich:ajaxValidator event="onblur"></rich:ajaxValidator>
+ 		</h:inputText>
+ 	</h:panelGrid>
+ </rich:panel>
+ 
+ <rich:panel width="300">
+ 	<f:facet name="header">
+ 		<h:outputText value="#{sbtprj.projectinformationsectionheader}" />
+ 	</f:facet>
+ 	
+ 	<h:panelGrid columns="2">
+ 		<h:outputText value="#{sbtprj.projecttype}"  />
+ 		<rich:comboBox	value="#{projectManager.projectreq.siteprojecttype}"
+			width="200px">
+			<f:selectItems value="#{projectTypesManager.projectTypesCombo}"/>
+		</rich:comboBox>
+ 	</h:panelGrid>
+ 	
+ 	<rich:spacer height="5"></rich:spacer>
+ 	<h:panelGrid columns="1">
+ 	<rich:dataTable value="#{projectManager.projectreq.equipments}"
+ 		var="eqitems"
+ 		id="eqtable"
+ 		binding="#{submitProject.equipmentdatatable}">
+ 		
+ 		<f:facet name="header">
+ 			<h:outputText value="#{sbtprj.equipmenttableheader}" />
+ 		</f:facet>
+ 		
+ 		<rich:column>
+ 			<f:facet name="header">
+ 				<h:outputText value="#{sbtprj.unitcolumnheader}" />
+ 			</f:facet>
+ 			<rich:comboBox value="#{eqitems.modelnumber}"
+ 				valueChangeListener = "#{submitProject.modelSelectionChanged()}"
+ 				id="modelcombo">
+ 				<f:selectItems value="#{equipmentManager.equipmentbyoemcombobox}"/>
+ 				<a4j:support event="onchange" reRender= "hp,temp">
+ 				</a4j:support>
+ 			</rich:comboBox>
+ 		</rich:column>
+		<!-- 
+ 		<rich:column>
+ 			<f:facet name="header">
+ 				<h:outputText value="HP" />
+ 			</f:facet>
+ 			<h:outputText value="#{eqitems.hoursepower}"
+ 				id="hp" />
+ 		</rich:column>
+ 		<rich:column>
+ 			<f:facet name="header">
+ 				<h:outputText value="Temp" />
+ 			</f:facet>
+ 			<h:outputText value="#{eqitems.temperature}" 
+ 				id="temp" />
+ 		</rich:column>
+		 -->
+		 
+ 		<rich:column>
+ 			<f:facet name="header">
+ 				<h:outputText value="#{sbtprj.replacingcolumnheader}" />
+ 			</f:facet>
+ 			<rich:comboBox value="#{eqitems.replacingequipment}">
+ 				<f:selectItems value="#{replacingEquipmentManager.replacementEquipmentCombo}"/>
+ 			</rich:comboBox>
+ 		</rich:column>
+ 	</rich:dataTable>
+ 	</h:panelGrid>
+ 	
+ 	<h:panelGrid columns="2">
+ 		<a4j:commandButton value="Add New Unit(s)"
+ 			action="#{submitProject.AddEquipment()}"
+ 			reRender="eqtable">
+ 		</a4j:commandButton>
+ 		<a4j:commandButton value="Clear Units(s)"
+ 			action="#{submitProject.ClearEquipment()}"
+ 			reRender="eqtable">
+ 		</a4j:commandButton>
+ 	</h:panelGrid>
+ 	
+ 	<h:panelGrid columns="2">
+ 	<h:outputText value="#{sbtprj.targetinstall}" />
+ 	<rich:calendar value="#{projectManager.projectreq.targetinstal}"
+ 		enableManualInput="false"
+ 		 datePattern="#{sbtprj.targetinstalldateformat}">
+ 	</rich:calendar>
+ 	<h:outputText value="#{sbtprj.summaryscope}" />
+ 	<h:inputTextarea value="#{projectManager.projectreq.summaryscope}" />
+ 	<h:outputText value="#{sbtprj.additionalnotes}" />
+ 	<h:inputTextarea value="#{projectManager.projectreq.additionalnotes}" />
+ 	</h:panelGrid>
+ </rich:panel>
+ 
+ </h:panelGrid>
+
+  
+ <rich:spacer height="10"></rich:spacer>
+ <a4j:commandButton value="Submit Project"
+ 	action="#{submitProject.submitProjectInfo()}"
+ 	reRender="requiredflds,maingrid,siteutility,confirmationpanel">
+ 	
+ </a4j:commandButton>
+ 
+ <rich:panel id="confirmationpanel">
+ <rich:spacer height="20"></rich:spacer>
+ <h:outputText value="#{sbtprj.submitconfirmation}" 
+ 	id="dispconfirm"
+ 	rendered="#{projectManager.hasbeensubmitted}"
+ 	styleClass="confirmationclass" />
+ <rich:spacer height="20"></rich:spacer>
+ </rich:panel>
+ 
+ 
+ </h:form>
+
+
+</ui:composition>
+   
+</html>

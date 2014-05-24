@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition>
+<f:view>
+
+<h:form>
+
+
+
+
+<h:panelGrid columns="6" 
+	id="loginid"
+	rendered="#{not userBean.loginsuccessful}">
+	<!-- 
+	<f:facet name="header">
+		<h:outputText value="#{loginmsg.userloginheader}" style="font-size:18px;"/>
+	</f:facet>
+	 -->
+
+
+
+
+	 
+<h:outputText value="#{loginmsg.username}"
+	size="50" />
+<h:inputText value="#{userBean.username}"
+	required="true"
+	requiredMessage="#{loginmsg.usernamerequired}"
+	validatorMessage="#{loginmsg.usernameinvalid}"
+	placeHolder="username">
+	<f:validateLength minimum="5" maximum="25"></f:validateLength>
+	<f:validator validatorId="UserNameValidator"/>
+</h:inputText>
+<h:outputText value="#{loginmsg.password}" />
+<h:inputSecret value="#{userBean.password}"
+	required="true"
+	requiredMessage="#{loginmsg.passwordrequired}"
+	validatorMessage="#{loginmsg.passwordinvalid}">
+	<f:validateLength minimum="5" maximum="25"></f:validateLength>
+	<f:validator validatorId="PasswordValidator"/>
+</h:inputSecret>
+<a4j:commandButton value="#{loginmsg.loginbutton}"
+	action="#{userBean.login()}" 
+	styleClass = "btn btn-default btn-primary pull-right"
+>
+</a4j:commandButton>
+
+	<a href="mailto:AccessHelp@realwinwin.com" id="helpicon">
+		<img src="${facesContext.externalContext.requestContextPath}/images/Help-Support-icon.png"/>
+	</a>
+			<rich:toolTip followMouse="false"
+				for="helpicon"
+				direction="top-right"
+				mode="ajax"
+				value="For immediate assistance please email AccessHelp@realwinwin.com or call (215) 609-4979"
+				horizontalOffset = "5"
+				verticalOffset="5"
+				styleClass="newtooltip">
+			</rich:toolTip>
+
+
+
+</h:panelGrid>
+
+</h:form>
+<p><h:messages style="color:red"/></p>
+
+</f:view>	
+</ui:composition>
+   
+</html>

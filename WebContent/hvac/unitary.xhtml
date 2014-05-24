@@ -1,0 +1,1874 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="/template/rwwtemplate.xhtml">
+
+<ui:define name="rcontent">
+
+<div id="content">
+
+<img src="${facesContext.externalContext.requestContextPath}/images/lead.png"></img>
+<h:form>
+
+<rich:panel styleClass="headerpanel headertextclass">
+<rich:spacer height="30"></rich:spacer>
+<h:outputText value="Unitary (> 5.4 tons) / Air Cooled Chillers" styleClass="headertextclass"  />
+<rich:spacer height="30"></rich:spacer>
+</rich:panel>
+
+<rich:tabPanel id="hvaccaltabpanel"
+	switchType="client"
+	selectedTab="#{hVACCalculatorBacking.selectedtab}"
+	>
+	
+
+ 
+
+<rich:tab id="custom">
+	<f:facet name="label">
+		<h:outputText styleClass="tabheader" value="#{hvaccalcmsg.projectentrytabtitle}" />
+	</f:facet>
+
+<!-- (1) -->
+<div>
+	
+	<h3><img src="${facesContext.externalContext.requestContextPath}/images/m1.png" height="75" width="75"></img>Enter job name</h3>
+	
+		<div class="divnewinput">
+			
+			<h:panelGrid columns="1" style="width:420px">
+			
+			<h:outputText value=""  styleClass="normaltextclass" />
+			<h:inputText value="#{hVACCalculatorBacking.projectname}" styleClass="normaltextclass" style="width:100%">
+					<!--  
+					<a4j:support event="onchange" 
+								reRender="s2">	
+					</a4j:support>
+					 -->
+				<f:validateLength maximum="50"></f:validateLength>
+			 	<f:validator validatorId="AlphaNumericValidator"/>
+			</h:inputText>
+			</h:panelGrid>
+		
+		</div>
+
+</div>
+
+<!-- (2) -->
+<div>
+	
+	<h3><img src="${facesContext.externalContext.requestContextPath}/images/m2.png" height="75" width="75"></img>Select job type</h3>
+	
+		<div class="divnewinput">
+		
+
+		<h:panelGrid columns="3">
+		<h:selectBooleanCheckbox label="New Construction" value="#{hVACCalculatorBacking.newconstruction}" 
+			styleClass="checkbox">
+			<h:outputText value="New Construction " 
+				styleClass="normaltextclass" />
+		</h:selectBooleanCheckbox>
+		<rich:spacer width="15"></rich:spacer>
+		<h:selectBooleanCheckbox label="Retrofit" value="#{hVACCalculatorBacking.retrofit}" 
+			styleClass="checkbox">
+			<h:outputText value="Retrofit/Replacement " 
+				styleClass="normaltextclass" />
+		</h:selectBooleanCheckbox>
+		
+				<rich:toolTip followMouse="true"
+					
+					direction="top-right"
+					mode="ajax"
+					value='New Construction:  Ground up construction and building shell take over.
+						Retrofit:  Installation of new HVAC equipment in an existing building that is in use.'
+					horizontalOffset = "5"
+					verticalOffset="5"
+					styleClass="newtooltip">
+				</rich:toolTip>
+		
+		</h:panelGrid>
+
+
+		
+		</div>
+
+</div>
+
+<!-- (3) -->
+<div>
+	
+	<h3><img src="${facesContext.externalContext.requestContextPath}/images/m3.png" height="75" width="75"></img>Enter site location</h3>
+	
+		<div class="divnewinput">
+		
+			<h:panelGrid columns="1">
+				<!-- 
+				<h:outputText value="#{hvaccalcmsg.zipcodelabel}" />
+				-->
+				<h:inputTextarea value="#{hVACCalculatorBacking.ziplist}"
+					cols="50"
+					rows="10"
+					id="siteentrybox">
+					
+						<rich:toolTip followMouse="false"
+							direction="top-right"
+							mode="ajax"
+							value='Please copy and paste a column of zip codes from Excel, or enter manually one above the other, then click "Find Electric Utilities" button.'
+							horizontalOffset = "5"
+							verticalOffset="5"
+							styleClass="newtooltip">
+						</rich:toolTip>
+					
+				</h:inputTextarea>
+			</h:panelGrid>
+			
+			<rich:spacer height = "5"></rich:spacer>
+			
+			<div class="divbuttons">
+			<h:panelGrid columns="2">
+			
+			<a4j:commandButton action="#{hVACCalculatorBacking.parseZipCode()}" 
+				value="Find Electric Utilities"
+				reRender="hvaczuitm,siteentrybox"
+				onclick="javascript:Richfaces.showModalPanel('prcprg');"
+				oncomplete="javascript:Richfaces.hideModalPanel('prcprg');"
+				styleClass = "btn btn-default btn-primary pull-right"
+				>
+				
+				<!-- 
+				<rich:toolTip followMouse="true"
+					direction="top-right"
+					mode="ajax"
+					value="Please click to parse sites and zipcodes"
+					horizontalOffset = "5"
+					verticalOffset="5"
+					styleClass="newtooltip">
+				</rich:toolTip>
+				-->
+			
+			</a4j:commandButton>
+			
+
+			</h:panelGrid>
+			</div>
+		
+		</div>
+
+</div>
+
+<!-- (4) -->
+<div>
+	
+	<h3><img src="${facesContext.externalContext.requestContextPath}/images/m4.png" height="75" width="75"></img>Select electric utility</h3>
+	
+		<div class="divnewinput">
+		
+			<div class="divcont">
+			
+			<rich:dataTable value="#{zipUtilitiesManager.hvaczulist}"
+				var="hvaczuitems"
+				id="hvaczuitm"
+				binding="#{zipUtilitiesManager.hvaczulistdatatable}"
+				>
+				
+				
+				<rich:column width="200px">
+					<f:facet name="header">
+						<h:outputText value="Site" />
+					</f:facet>
+					<h:outputText value="#{hvaczuitems.sitenum}" />
+				</rich:column>
+				
+				<rich:column width="200px">
+					<f:facet name="header">
+						<h:outputText value="Zip Code" />
+					</f:facet>
+					<h:outputText value="#{hvaczuitems.zipcode}" style="width:100px;"/>
+				</rich:column>
+				
+				<rich:column width="400px">
+					<f:facet name="header">
+						<h:outputText value="Electric Utility" />
+					</f:facet>
+					
+					<rich:comboBox value="#{hvaczuitems.plattsutilityname}"
+						width="300px"
+						id="hvacutlcombo" 
+						defaultLabel="No Utility Found"
+						valueChangeListener = "#{hVACCalculatorBacking.utilitySelectionChanged}"
+						rendered = "#{hvaczuitems.numofutility gt 1}">
+						<f:selectItems value="#{hvaczuitems.utilitybyzipcombo}"
+							var="utlbyzipitems"/>
+						<a4j:support event="onchange"></a4j:support>
+					</rich:comboBox>
+					
+					<h:outputText value="#{hvaczuitems.plattsutilityname}" 
+						rendered="#{hvaczuitems.numofutility lt 2}" />
+				</rich:column>
+			</rich:dataTable>
+			
+			</div>
+			
+			<div class="divbuttons">
+			
+			<a4j:commandButton action="#{hVACCalculatorBacking.clearSites()}"
+				value="Clear All"
+				reRender="hvaczuitm"
+				onclick="javascript:Richfaces.showModalPanel('prcprg');"
+				oncomplete="javascript:Richfaces.hideModalPanel('prcprg');"
+				styleClass = "btn btn-default btn-primary"
+				>
+				
+				<!-- 
+				<rich:toolTip followMouse="false"
+					direction="top-right"
+					mode="ajax"
+					value="Please click to clear sites and zipcodes"
+					horizontalOffset = "5"
+					verticalOffset="5"
+					styleClass="newtooltip">
+				</rich:toolTip>
+				 -->
+				
+			</a4j:commandButton>
+			
+			</div>
+
+	
+		</div>
+
+</div>
+
+<!-- (5) -->
+<div>
+	
+	<h3><img src="${facesContext.externalContext.requestContextPath}/images/m5.png" height="75" width="75"></img>Enter equipment information</h3>
+	
+		<div class="divnewinput">
+		
+			<!-- insert content here -->
+		<div class="divcont">
+
+
+			<rich:dataTable value="#{hVACCalcResultManger.hvacinput}"
+				var="hvacinputitems"
+				id="hvacinput"
+				
+				binding="#{hVACCalcResultManger.hvacinputdatatable}"
+				columnClasses="panelgridtopalignclass,panelgridtopalignclass,panelgridtopalignclass">
+			<!-- 
+			EQUIPMENT INPUT
+			 -->
+
+				
+				<rich:column width="400px">
+					
+					<f:facet name="header">
+						<h:outputText value="Equipment" />
+					</f:facet>
+					
+					<h:panelGrid columns="2" >
+			
+			<!-- added -->		
+					
+					<!--  
+					<h:outputText value="Equipment" />
+					<rich:comboBox value=""
+						id="equiptype"
+						width="300px">
+						<f:selectItems value="#{equipmentTypesManager.equipmentTypesCombo}"/>
+						<a4j:support event="onchange" reRender="hvacinputmodelnumber">
+							
+						</a4j:support>
+						
+					</rich:comboBox>
+			 		-->
+						
+			<!-- close added -->			
+						<h:outputText value="Quantity" />
+						<h:inputText value="#{hvacinputitems.numberofunits}" size="5">
+						</h:inputText>
+
+						<h:outputText value="Model" />
+						<rich:comboBox	value="#{hvacinputitems.modelnumber}"
+							id="hvacinputmodelnumber"
+							valueChangeListener = "#{hVACCalculatorBacking.modelnumberSelectionChanged}"
+							width="300px">
+							<f:selectItems value="#{equipmentManager.equipmentbyoemcombobox}"/>
+						
+							<a4j:support event="onchange" reRender="hvacinput"></a4j:support>
+						</rich:comboBox>
+						
+
+					
+			
+
+						
+					</h:panelGrid>
+					
+					<!-- 
+					<br />
+					<h:panelGrid columns="3" rendered="#{hvacinputitems.equiptype == 3}">
+						
+						<h:outputText value="Size (Design Conditions)" />
+						<h:inputText value="#{hvacinputitems.designsize}" id="designsizeinput" size = "5" />
+						<rich:comboBox	value="#{hvacinputitems.designsizeuomval}"
+							id="designsizesizeuom"
+							width="60px" >
+							<f:selectItems value="#{uOMManager.sizeUOMByConvertableCombo}" />
+						</rich:comboBox>
+						 
+					</h:panelGrid>
+					 -->
+				</rich:column>
+				
+				<rich:column width="250px">
+					
+					<f:facet name="header">
+						<h:outputText value="AHRI Cooling Specs" />
+					</f:facet>
+					
+					
+					<!--  begin change 09/10/2013 -->
+					
+					<h:panelGrid columns="3" id="coolingefficiencypanel" >
+							<!-- 
+							<f:facet name="header">
+								<h:outputText value="AHRI Cooling Efficiency" styleClass="smallheader"/>
+							</f:facet>
+							 -->
+						<h:outputText value="Size" />
+						<h:inputText value="#{hvacinputitems.tons}" id="hvacsizeinput"  disabled="true" size="5"/>
+						<h:outputText value="TON"  />
+						<!--  
+						<rich:comboBox	value="#{hvacinputitems.sizeuomval}"
+							id="hvacinputsizeuom"
+							
+							disabled="true"
+							>
+							<f:selectItems value="#{uOMManager.sizeUOMByConvertableCombo}" />
+						</rich:comboBox>
+						-->
+						
+						<h:outputText value="Full Load" />
+						<h:inputText value="#{hvacinputitems.flv1}" 
+							id="cflv" 
+							disabled="true" 
+							size="5"/>
+						<rich:comboBox	value="#{hvacinputitems.flvuomval}"
+							id="cflvuomin"
+							disabled="true" 
+							width="100px">
+							 
+							<f:selectItems value="#{uOMManager.flvUOMByConvertableCombo}" />
+							
+						</rich:comboBox>
+						
+						
+						<h:outputText value="Seasonal" 
+							rendered="#{hvacinputitems.equiptype == 4}" />
+						<h:inputText value="#{hvacinputitems.flv2}" 
+							id="cseasonalinput" 
+							disabled="#{hvacinputitems.equiptype != 3}" 
+							rendered="#{hvacinputitems.equiptype == 4}" 
+							size="5"/>
+						<h:outputText value="#{hvacinputitems.seasonaluomval}" 
+							rendered="#{hvacinputitems.equiptype == 4}" />
+						  
+						<h:outputText value="Part Load" 
+							rendered="#{hvacinputitems.equiptype != 5 and hvacinputitems.subequiptype != 6}" />
+						<h:inputText value="#{hvacinputitems.iplv2}" 
+							id="ciplvin" 
+							disabled="true" 
+							rendered="#{hvacinputitems.equiptype != 5 and hvacinputitems.subequiptype != 6}" 
+							size="5"/>
+						<rich:comboBox	value="#{hvacinputitems.iplvuomval}"
+							id="ciplvuomin"
+							disabled="true"
+							width="100px"
+							rendered="#{hvacinputitems.equiptype != 5 and hvacinputitems.subequiptype != 6}" >
+							
+							<f:selectItems value="#{uOMManager.iplvUOMByConvertableCombo}" />
+							
+						</rich:comboBox>
+					</h:panelGrid>
+					
+					<!--  end change 09/10/2013 -->
+					
+					</rich:column>
+					
+					
+					<rich:column width="250px" > 
+					
+					<!--  
+					<f:facet name="header">
+						<h:outputText value="Design Cooling Specs" />
+					</f:facet>
+					
+					<h:panelGrid columns="3" id="designcoolingefficiencypanel" rendered="#{hvacinputitems.equiptype == 2 or hvacinputitems.equiptype == 3}">
+						
+							 
+						<h:outputText value="Size" /> 
+						<h:inputText value="#{hvacinputitems.designsize}" id="designsizeinput"  size="5"/>
+						<h:outputText value="#{hvacinputitems.designsizeuomval}"  />
+
+						
+						<h:outputText value="Full Load" />
+						<h:inputText value="#{hvacinputitems.designflv}" size="5"/>
+						<rich:comboBox	value="#{hvacinputitems.designflvuomval}"
+							id="dcflvuom"
+							width="100px">
+							<f:selectItems value="#{uOMManager.flvUOMByConvertableCombo}" />
+						</rich:comboBox>
+
+						<h:outputText value="Part Load" />
+						<h:inputText value="#{hvacinputitems.designiplv}" size="5"/>
+						<rich:comboBox	value="#{hvacinputitems.designiplvuomval}"
+							id="dciplvuom"
+							width="100px">
+							
+							<f:selectItems value="#{uOMManager.UOMByConvertableCombo}" />
+						</rich:comboBox>
+					</h:panelGrid>
+				-->
+				</rich:column>
+				
+				<!--  JT removed 08/13/2013
+				<rich:column>
+					
+					<h:panelGrid columns="3" id="heatingefficienypanelgrid" 
+						rendered="#{hvacinputitems.equiptype == 3 or (hvacinputitems.equiptype == 5 and hvacinputitems.subequiptype == 6)}" >
+						<f:facet name="header">
+							<h:outputText value="Heating Efficiency" />
+						</f:facet>
+						
+						<h:outputText value="Full Load: " />
+						<h:inputText value="#{hvacinputitems.heatingflv}" id="hflvin" size="5" readonly="#{hvacinputitems.equiptype != 3}" />
+						<rich:comboBox	value="#{hvacinputitems.heatingflvuomval}"
+							id="hflvuomin"
+							width="80px"
+							disabled="#{hvacinputitems.equiptype != 3}"
+							>
+							<f:selectItems value="#{uOMManager.flvUOMByConvertableCombo}" />
+						</rich:comboBox>
+						 
+						 
+						<h:outputText value="Seasonal: " rendered="false"/>
+						<h:inputText value="#{hvacinputitems.heatingseasonal}" id="hseasonalinput" 
+							size="5" readonly="#{hvacinputitems.equiptype != 3}" 
+							rendered="false" />
+						<h:outputText value="#{hvacinputitems.heatingseasonaluomval}" 
+							rendered="false" />
+									  
+						<h:outputText value="Part Load: " 
+							rendered="false" />
+						<h:inputText value="#{hvacinputitems.heatingiplv}" id="hiplvin" size="5" readonly="#{hvacinputitems.equiptype != 3}" 
+							rendered="false" />
+						<rich:comboBox	value="#{hvacinputitems.heatingiplvuomval}"
+							id="hiplvuomin"
+							width="80px"
+							disabled="#{hvacinputitems.equiptype != 3}"
+							 
+							rendered="false">
+							<f:selectItems value="#{uOMManager.iplvUOMByConvertableCombo}" />
+						</rich:comboBox>
+						
+					</h:panelGrid>
+					
+					<br />
+					
+					<h:panelGrid columns="3" id="designheatingefficiencypanelgrid" rendered="#{hvacinputitems.equiptype == 3}" >
+						
+						<f:facet name="header">
+							<h:outputText value="Design Heating Efficiency" />
+						</f:facet>
+						
+						<h:outputText value="Full Load: " />
+						<h:inputText value="#{hvacinputitems.designheatingflv}" size="5"/>
+						<rich:comboBox	value="#{hvacinputitems.designheatingflvuomval}"
+							id="dhflvuom"
+							width="80px">
+							<f:selectItems value="#{uOMManager.flvUOMByConvertableCombo}" />
+						</rich:comboBox>
+						
+						<h:outputText value="Seasonal: " />
+						<h:inputText value="#{hvacinputitems.designheatingseasonal}" size="5" />
+						<h:outputText value="#{hvacinputitems.designheatingseasonaluoomval}" />
+						
+						<h:outputText value="Part Load: " />
+						<h:inputText value="#{hvacinputitems.designheatingiplv}" size="5" />
+						<rich:comboBox	value="#{hvacinputitems.designheatingiplvuomval}"
+							id="dhiplvuom"
+							width="80px">
+							<f:selectItems value="#{uOMManager.iplvUOMByConvertableCombo}" />
+						</rich:comboBox>
+					</h:panelGrid>
+				</rich:column>
+				-->
+			</rich:dataTable>
+			
+			<rich:spacer height="15"></rich:spacer>
+			
+
+			
+			<rich:spacer height="10"></rich:spacer>
+			
+			<div class="divbuttons">
+			<h:panelGrid columns="5">
+			<a4j:commandButton value="Add Equipment"
+				action="#{hVACCalculatorBacking.addHVACEquipmentInput()}"
+				reRender="hvacinput" 
+				styleClass = "btn btn-default btn-primary pull-right"
+				>
+				
+				<!-- 
+				<rich:toolTip followMouse="true"
+					direction="top-right"
+					mode="ajax"
+					value="Please click to add new row to select equipment"
+					horizontalOffset = "5"
+					verticalOffset="5"
+					styleClass="newtooltip">
+				</rich:toolTip>
+				 -->
+				
+			</a4j:commandButton>
+			  
+			
+			<a4j:commandButton value="Clear All"
+				action="#{hVACCalculatorBacking.clearHVACEquipmentInput()}"
+				reRender="hvacinput"
+				styleClass = "btn btn-default btn-primary pull-right"
+				>
+				<!-- 
+				<rich:toolTip followMouse="true"
+					direction="top-right"
+					mode="ajax"
+					value="Please click to clear all selected equpiment"
+					horizontalOffset = "5"
+					verticalOffset="5"
+					styleClass="newtooltip">
+				</rich:toolTip>
+				 -->
+				
+			</a4j:commandButton>
+			
+			<a4j:commandButton value="Clear Last"
+				action="#{hVACCalculatorBacking.clearLastHVACEquipmentInput()}"
+				reRender="hvacinput"
+				styleClass = "btn btn-default btn-primary pull-right"
+				>
+				
+				<!--  
+				<rich:toolTip followMouse="true"
+					direction="top-right"
+					mode="ajax"
+					value="Please click to remove last equpiment"
+					horizontalOffset = "5"
+					verticalOffset="5"
+					styleClass="newtooltip">
+				</rich:toolTip>
+				-->
+				
+			</a4j:commandButton>
+			
+
+			<!-- style="background-color:green" -->
+			
+			</h:panelGrid>
+			</div>	
+		
+		
+		
+		</div>
+		
+		</div>
+
+</div>
+
+<!-- (6) -->
+<div>
+	
+	<h3><img src="${facesContext.externalContext.requestContextPath}/images/m6.png" height="75" width="75"></img>
+	
+			<a4j:commandButton value="Estimate Rebate >>"
+				action="#{hVACCalculatorBacking.calculateHVACCustom()}"
+				reRender="hvacoutresult, hvaccaltabpanel,submitcustomreviewpanel"
+				onclick="javascript:Richfaces.showModalPanel('prcprg');"
+				oncomplete="javascript:Richfaces.hideModalPanel('prcprg');"
+				styleClass = "btn btn-success btn-large"
+				style = "
+					color: #ffffff;
+					text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+					background-color: #5bb75b;
+					background-image: linear-gradient(to bottom, #62c462, #51a351);
+					background-repeat: repeat-x;
+					border-color: #51a351 #51a351 #387038;
+					filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462', endColorstr='#ff51a351', GradientType=0);
+					filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+					*width: 500px;
+					*height: 75px;
+					font-size: 18px;
+					font-weight: bold;
+				"
+				>
+				
+				<rich:toolTip followMouse="false"
+					direction="top-right"
+					mode="ajax"
+					value="Click for instant rebate feedback"
+					horizontalOffset = "5"
+					verticalOffset="5" 
+					styleClass="newtooltip">
+				</rich:toolTip>
+				
+			</a4j:commandButton>
+	
+	</h3>
+	
+		<div class="divnewinput">
+		
+			<h:outputText value="#{hVACCalculatorBacking.hvacerrmsg}"
+				styleClass="errmsgclass" 
+				id="hvaccalcerrmsg" />
+			<rich:messages styleClass="errmsgclass"></rich:messages>
+		
+		</div>
+
+</div>
+
+
+
+
+
+	<!-- 
+	<rich:spacer height = "5"></rich:spacer>
+	<h:panelGrid columns="3">
+	<h:outputText value="Parse Zip Code By: " 
+		styleClass="normaltextclass" />
+	<h:selectOneRadio value="#{hVACCalculatorBacking.recordseperator}" 
+		styleClass="normaltextclass" >
+		<f:selectItem itemValue="new line" itemLabel="New Line"/>
+		<f:selectItem itemValue="tab" itemLabel="Tab"/>
+		<f:selectItem itemValue="other" itemLabel="Other">
+		</f:selectItem>
+	</h:selectOneRadio>
+	<h:inputText value="#{hVACCalculatorBacking.otherseparatorchar}" size="2" />
+	</h:panelGrid>
+	 -->
+	
+<div class="divnewinput">
+
+<rich:spacer height="10"></rich:spacer>
+<h:panelGrid>
+ 
+<h:outputText value="#{hvaccalcmsg.disclamerparagraph1}" styleClass="disclaimernormaltextclass" />
+<h:outputText value=" " />
+<h:outputText value=" " />
+ 
+<h:outputText value="#{hvaccalcmsg.disclamerparagraph2}" styleClass="disclaimernormaltextclass" />
+</h:panelGrid>
+<rich:spacer height="10"></rich:spacer>		
+
+</div>
+
+</rich:tab>
+
+<rich:tab id="resulttab">
+
+	
+	<f:facet name="label">
+		<h:outputText styleClass="tabheader" value="#{hvaccalcmsg.projectresulttabtitle}" />
+	</f:facet>
+
+
+<h3>Equipment</h3>
+<rich:dataTable value="#{hVACCalcResultManger.hvacinput}"
+	var = "hvacrsltinputitems"
+	id = "hvacinputresult"
+	styleClass="tableclass"
+	headerClass="tableheaderleftalignclass"
+	columnClasses="tablecolumnleftalignclass" >
+	
+	<!--  
+	<f:facet name="header">
+		<h:outputText value="Equipment" />
+	</f:facet>
+	-->
+	
+	<rich:column width="300px">
+		<f:facet name="header">
+			<h:outputText value="Model #" />
+		</f:facet>
+		<h:outputText value="#{hvacrsltinputitems.modelnumber}" 
+			rendered="#{hvacrsltinputitems.modelnumber.length() > 0}" />
+	</rich:column>
+	
+	<rich:column width="60px">
+		<f:facet name="header">
+			<h:outputText value="Qty" />
+		</f:facet>
+		<h:outputText value="#{hvacrsltinputitems.numberofunits}" 
+			rendered="#{hvacrsltinputitems.modelnumber.length() > 0}" />
+	</rich:column>
+	
+	<rich:column width="80px">
+		<f:facet name="header">
+			<h:outputText value="Tons" />
+		</f:facet>
+		<h:outputText value="#{hvacrsltinputitems.tons}" 
+			rendered="#{hvacrsltinputitems.modelnumber.length() > 0}" />
+	</rich:column>
+	
+	<rich:column width="110px">
+		<f:facet name="header">
+			<h:outputText value="Full Load" />
+		</f:facet>
+		<h:outputText value="#{hvacrsltinputitems.flv1} #{hvacrsltinputitems.flvuomval}" 
+			rendered="#{hvacrsltinputitems.modelnumber.length() > 0}" />
+	</rich:column>
+	
+	<rich:column width="110px">
+		<f:facet name="header">
+			<h:outputText value="Part Load" />
+		</f:facet>
+		<h:outputText value="#{hvacrsltinputitems.iplv2} #{hvacrsltinputitems.iplvuomval}" 
+			rendered="#{hvacrsltinputitems.modelnumber.length() > 0}" />
+	</rich:column>
+</rich:dataTable>
+
+<br />
+
+<!-- JT 08/05/2013
+<h:panelGrid columns="1" id="submitcustomreviewpanel">
+<a4j:commandButton id="customreview"
+	value="Custom Review"
+	rendered="#{not hVACCalcResultManger.hasbeensubmitted}"
+	action="#{hVACCalculatorBacking.submitCustomRebatesReview()}"
+	onclick="javascript:Richfaces.showModalPanel('prcprg');"
+	oncomplete="javascript:Richfaces.hideModalPanel('prcprg');"
+	reRender="submitcustomreviewpanel">
+	
+	<rich:toolTip followMouse="true"
+		direction="top-right"
+		mode="ajax"
+		value="Please click to submit equipments for custom review"
+		horizontalOffset = "5"
+		verticalOffset="5">
+	</rich:toolTip>
+	
+</a4j:commandButton>
+
+<h:outputText value="#{hVACCalculatorBacking.customreviewsubmitconfirmation}" 
+	styleClass="confirmationclass" />
+	
+</h:panelGrid>
+
+
+<br />
+-->
+<br />
+<div class="divcont">
+<h3>Result</h3>
+<rich:dataTable value = "#{hVACCalcResultManger.hvacoutput}"
+	var = "hvacoutitems"
+	id = "hvacoutresult"
+	onRowMouseOver="this.style.backgroundColor='evenrowclass'"
+	onRowMouseOut="this.style.backgroundColor='evenrowclass'"
+	styleClass="tableclass"
+	rowClasses="evenrowclass"
+	columnClasses="tablecolumnleftalignclass" 
+	
+	headerClass="tableheaderleftalignclass">
+	
+	<!-- 
+	<f:facet name="header">
+		<h:outputText value="Result" 
+			id="hvaccalctableheader" />
+	</f:facet>
+	 -->
+	
+	<rich:column style="padding:7px;">
+		<f:facet name="header" >
+			<h:panelGrid columns="1" >
+			<a4j:commandButton value="Expand All" 
+				image = "#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/images/plus.gif"
+				rendered="#{not hVACCalcResultManger.expandalldetails}"
+				reRender="hvacoutresult"
+				style="height:11px;width:11px;"
+				action="#{hVACCalculatorBacking.expandAllHvacOutputDetail()}">	
+			</a4j:commandButton>
+			<a4j:commandButton value="Collapse All"
+				image = "#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/images/minus.gif"
+				rendered="#{hVACCalcResultManger.expandalldetails}"
+				reRender="hvacoutresult"
+				style="height:11px;width:11px;"
+				action="#{hVACCalculatorBacking.collapseAllHvacOutputDetail()}">
+					
+			</a4j:commandButton>
+			</h:panelGrid>
+		</f:facet>
+		<a4j:commandButton value="Expand"
+			image = "#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/images/plus.gif"
+			rendered="#{not hvacoutitems.showdetail and hvacoutitems.hvacdtl.size() > 0}" 
+			style="height:11px;width:11px;"
+			reRender="hvacoutresult,hvacoutitemsdtl"
+			action="#{hVACCalculatorBacking.generateHVACRebateTableHeader()}">
+			
+			<a4j:actionparam name="Expand" value="true" 
+					assignTo = "#{hvacoutitems.showdetail}" />
+					
+		</a4j:commandButton>
+		<a4j:commandButton value="Collapse"
+			image = "#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/images/minus.gif"
+			rendered = "#{hvacoutitems.showdetail and hvacoutitems.hvacdtl.size() > 0}"
+			style="height:11px;width:11px;"
+			reRender="hvacoutresult,hvacoutitemsdtl"
+			action="#{hVACCalculatorBacking.generateHVACRebateTableHeader()}">
+			
+			<a4j:actionparam name="expand" value="false" 
+					assignTo = "#{hvacoutitems.showdetail}" />
+					
+		</a4j:commandButton>
+	</rich:column>
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Site" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.sitenum}" />
+	</rich:column>
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Zip Code" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.zipcodes}" />
+	</rich:column>
+	
+	<rich:column  colspan="2">
+		<f:facet name="header">
+			<h:outputText value="Utility" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.utilityname}" />
+	</rich:column>
+	
+	<!-- 
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Choice" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.hasaltutl eq 'Y' ? 'Yes' : 'No'}" />
+	</rich:column>
+	 -->
+	 
+	<!-- 
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Rebate Program" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.rebatorname}" />
+	</rich:column>
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Rebate ALT" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.hasaltrebateprog}" />
+	</rich:column>
+	 
+	 
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Program" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.isprogram eq 'T' ? 'Yes' : 'No'}" />
+	</rich:column>
+	
+	-->
+	
+	<!-- 
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Qualify Unit(s)" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.numofqualify}">
+			<f:convertNumber pattern="#,##0"/>
+		</h:outputText>
+	</rich:column>
+	 -->
+	 
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Est. Rebate" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.qualifyamount}">
+			<f:convertNumber pattern="$#,##0.00"/>
+		</h:outputText>
+	</rich:column>
+
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Est. Capture Fee" />
+		</f:facet>
+		<!-- 
+		<h:outputText value="#{(hvacoutitems.qualifyamount==0) ? 0 : (((150 + hvacoutitems.qualifyamount * 0.12) >= 5000) ? 5000 : 150 + hvacoutitems.qualifyamount * 0.12)}">
+			<f:convertNumber pattern="$#,##0.00"/>
+		</h:outputText>
+		-->
+		<h:outputText value="">
+		</h:outputText>		 
+	</rich:column>
+
+	<rich:column colspan="1">
+		<f:facet name="header">
+			<h:outputText value="Comments" />
+		</f:facet>
+		<h:outputText value="" />
+	</rich:column>
+	
+	<rich:subTable value="#{hvacoutitems.hvacdtl}"
+		var="hvacoutitemsdtl"
+		id="hvacdtlsubtbl"
+		rendered="#{hvacoutitems.showdetail}"
+		onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+		
+		<rich:column colspan = "3">
+			<!-- 
+			<f:facet name="header">
+				<h:outputText value=" " />
+			</f:facet>
+			 -->
+			<h:outputText value=" " />
+		</rich:column>
+		
+		<rich:column>
+			<!-- 
+			<f:facet name="header">
+				<h:outputText value="Model Number" />
+			</f:facet>
+			 -->
+			<h:outputText value="#{hvacoutitemsdtl.modelnumber}#{hvacoutitemsdtl.modelcoilnumber.length() == 0 ? '' : '_'}#{hvacoutitemsdtl.modelcoilnumber}" />
+		</rich:column>
+		
+		<rich:column>
+			<!-- 
+			<f:facet name="header">
+				<h:outputText value="Tons" />
+			</f:facet>
+			 -->
+			<h:outputText value="#{hvacoutitemsdtl.tonnage} Tons" />
+		</rich:column>
+		
+		<!-- 
+		<rich:column>
+			
+			<f:facet name="header">
+				<h:outputText value="EER" />
+			</f:facet>
+		
+			<h:outputText value="#{hvacoutitemsdtl.flv1} EER" />
+		</rich:column>
+			
+		
+		<rich:column>
+			
+			<f:facet name="header">
+				<h:outputText value="IEER" />
+			</f:facet>
+			 
+			<h:outputText value="#{hvacoutitemsdtl.iplv1} IEER" />
+		</rich:column>
+		
+		<rich:column>
+			
+			<f:facet name="header">
+				<h:outputText value="Is Qualify" />
+			</f:facet>
+			
+			<h:outputText value="#{hvacoutitemsdtl.isqualifying}" />
+		</rich:column>
+		 -->
+		
+		<!-- 
+		<rich:column>
+			<h:outputText value="#{hvacoutitemsdtl.qualifyquantity}" >
+				<f:convertNumber pattern="#,##0"/>
+			</h:outputText>
+		</rich:column>
+		-->
+		  
+		<rich:column>
+			<!-- 
+			<f:facet name="header">
+				<h:outputText value="Rebate Amount" />
+			</f:facet>
+			 -->
+			<h:outputText value="#{hvacoutitemsdtl.qualifyrebateamt}">
+				<f:convertNumber pattern="$#,##0.00"/>
+			</h:outputText>
+		</rich:column>
+
+		<rich:column>
+			<!-- 
+			<f:facet name="header">
+				<h:outputText value="Rebate Amount" />
+			</f:facet>
+			 -->
+			<h:outputText value="#{(hvacoutitemsdtl.qualifyrebateamt==0) ? 0 : (((150 + hvacoutitemsdtl.qualifyrebateamt * 0.12) >= 5000) ? 5000 : 150 + hvacoutitemsdtl.qualifyrebateamt * 0.12)}">
+				<f:convertNumber pattern="$#,##0.00"/>
+			</h:outputText>
+		</rich:column>
+		
+		<rich:column colspan="1">
+			<!-- 
+			<f:facet name="header">
+				<h:outputText value="Comments" />
+			</f:facet>
+			 -->
+			<h:outputText value="#{hvacoutitemsdtl.comments}" />
+		</rich:column>
+		
+	</rich:subTable>
+
+</rich:dataTable>
+</div>
+
+<rich:spacer height="10"></rich:spacer>
+<h:panelGrid>
+<h:outputText value="#{hvaccalcmsg.disclamerparagraph1}" styleClass="disclaimernormaltextclass" />
+<h:outputText value=" " />
+<h:outputText value=" " />
+<h:outputText value="#{hvaccalcmsg.disclamerparagraph2}" styleClass="disclaimernormaltextclass" />
+</h:panelGrid>
+<rich:spacer height="10"></rich:spacer>
+
+</rich:tab>
+
+<!-- 
+<rich:tab id="customtab">
+
+	<f:facet name="label">
+		<h:outputText styleClass="labeltextclass" value="Custom" />
+	</f:facet>
+	
+<table>
+<tr>
+<td width="495px" valign="top">
+
+<h:panelGrid columns="3">
+<h:selectBooleanCheckbox label="New Construction" value="#{hVACCalculatorBacking.customnewconstruction}" 
+	styleClass="checkboxclass">
+	<h:outputText value="New Construction " 
+		styleClass="normaltextclass" />
+</h:selectBooleanCheckbox>
+<rich:spacer width="15"></rich:spacer>
+<h:selectBooleanCheckbox label="Retrofit" value="#{hVACCalculatorBacking.customretrofit}" 
+	styleClass="checkboxclass">
+	<h:outputText value="Retrofit " 
+		styleClass="normaltextclass" />
+</h:selectBooleanCheckbox>
+<rich:spacer height="15"></rich:spacer>
+</h:panelGrid>
+
+<h:panelGrid columns="2">
+<h:outputText value="Job Name"  styleClass="normaltextclass" />
+<h:inputText value="#{hVACCalculatorBacking.projectnamecustomtab}" styleClass="normaltextclass" >
+	<f:validateLength maximum="50"></f:validateLength>
+ 	<f:validator validatorId="AlphaNumericValidator"/>
+</h:inputText>
+</h:panelGrid>
+
+<div style="height:500px;width:495px;overflow:auto;">
+
+ 
+<rich:dataTable value="#{hVACCalcResultManger.customhvacinput}"
+	var="customhvacinputitems"
+	id="customhvacinputid">
+	
+	<f:facet name="header">
+		<h:outputText value="Equipment Info" />
+	</f:facet>
+	
+	<rich:column>
+		<h:panelGrid columns="2">
+		<h:outputText value="Equipment Type " />
+		<rich:comboBox value="#{customhvacinputitems.equipmenttype}"
+			id="equiptype"
+			width="130px"
+			valueChangeListener = "#{hVACCalculatorBacking.equipmentTypeChanged}">
+			<f:selectItems value="#{equipmentTypesManager.equipmentTypesCombo}"/>
+			<a4j:support event="onchange" reRender="subequipid, customhvacinputid">
+			</a4j:support>
+		</rich:comboBox>
+		<h:outputText value="Subequipment Type " />
+		<rich:comboBox value="#{customhvacinputitems.subequipmenttype}"
+			id="subequipid"
+			width="130px">
+			<f:selectItems value="#{subEquipmentTypesManager.subeqtypesbyeqcombo}"/>
+		</rich:comboBox>
+		<h:outputText value="Quantity " />
+		<h:inputText value="#{customhvacinputitems.numberofunits}" />
+		<h:outputText value="Tonnage " />
+		<h:inputText value="#{customhvacinputitems.tons}" />
+		</h:panelGrid>
+	</rich:column>
+	
+	<rich:column>
+		<h:panelGrid columns="3">
+			<h:outputText value="FLV" />
+			<h:inputText value="#{customhvacinputitems.flv1}" />
+			<rich:comboBox value="#{customhvacinputitems.flv1unitofmeasurement}"
+				width="80px">
+				<f:selectItems value="#{uOMManager.UOMByConvertableCombo}"/>
+			</rich:comboBox>
+			<h:outputText value=" " />
+			<h:inputText value="#{customhvacinputitems.flv2}" />
+			<h:outputText value="#{customhvacinputitems.flv2unitofmeasurement}" />
+			<h:outputText value="IPLV" />
+			<h:inputText value="#{customhvacinputitems.iplv1}" />
+			<rich:comboBox value="#{customhvacinputitems.iplv1unitofmearsurement}"
+				width="80px">
+				<f:selectItems value="#{uOMManager.UOMByConvertableCombo}"/>
+			</rich:comboBox>
+			<h:outputText value=" " />
+			<h:inputText value="#{customhvacinputitems.iplv2}" />
+			<h:outputText value="#{customhvacinputitems.iplv2unitofmeasurement}" />
+		</h:panelGrid>	
+	</rich:column>
+	
+</rich:dataTable>
+
+<rich:spacer height="15"></rich:spacer>
+
+<h:outputText value="#{hVACCalculatorBacking.customhvacerrmsg}"
+	styleClass="errmsgclass" 
+	id="customhvaccalcerrmsg" />
+	
+<rich:spacer height="10"></rich:spacer>
+
+<h:panelGrid columns="3">
+<a4j:commandButton value = "Add New Equip"
+	action = "#{hVACCalculatorBacking.addCustomHVACInputEquipment()}"
+	reRender = "customhvacinputid"
+	onclick="javascript:Richfaces.showModalPanel('prcprg');"
+	oncomplete="javascript:Richfaces.hideModalPanel('prcprg');">
+	
+	<rich:toolTip followMouse="true"
+		direction="top-right"
+		mode="ajax"
+		value="Please click to add new equipment"
+		horizontalOffset="5"
+		verticalOffset="5"
+		layout="block">
+	</rich:toolTip>
+	
+</a4j:commandButton>
+<a4j:commandButton value = "Clear Equipt"
+	action = "#{hVACCalculatorBacking.clearCustomHVACInputEquipment()}"
+	reRender = "customhvacinputid"
+	onclick="javascript:Richfaces.showModalPanel('prcprg');"
+	oncomplete="javascript:Richfaces.hideModalPanel('prcprg');">
+	
+	<rich:toolTip followMouse="true"
+		direction="top-right"
+		mode="ajax"
+		value="Please click to clear equipments"
+		horizontalOffset="5"
+		verticalOffset="5"
+		layout="block">
+	</rich:toolTip>
+	
+</a4j:commandButton>
+<a4j:commandButton value="Estimate Rebate"
+	action="#{hVACCalculatorBacking.estimateCustomHVAC()}"
+	reRender="customhvacoutresult, customhvaccalcerrmsg"
+	onclick="javascript:Richfaces.showModalPanel('prcprg');"
+	oncomplete="javascript:Richfaces.hideModalPanel('prcprg');">
+	
+	<rich:toolTip followMouse="true"
+		direction="top-right"
+		mode="ajax"
+		value="Please click to estimate rebates"
+		horizontalOffset = "5"
+		verticalOffset="5">
+	</rich:toolTip>
+	
+</a4j:commandButton>
+
+</h:panelGrid>
+
+</div>
+
+</td>
+<td width="495" valign="top">
+			
+	<h:panelGrid columns="1">
+		<h:outputText value="Please copy site(s) and zipcode(s) from Excel to the box below. In Excel, 
+			site must be the first column and zipcode the second. 
+			Click Get Site Utility(s) button to retrieve utility(s)."
+			styleClass="normaltextclass" />
+		<h:inputTextarea value="#{hVACCalculatorBacking.customziplist}"
+			cols="80"
+			rows="10"
+			id="customsiteentrybox">
+		</h:inputTextarea>
+	</h:panelGrid>
+	
+	<rich:spacer height = "5"></rich:spacer>
+	<h:panelGrid columns="2">
+	<a4j:commandButton action="#{hVACCalculatorBacking.parseCustomHVACZipCode()}" 
+		value="Get Site Utility(s)"
+		reRender="customhvaczuitm,customsiteentrybox"
+		onclick="javascript:Richfaces.showModalPanel('prcprg');"
+		oncomplete="javascript:Richfaces.hideModalPanel('prcprg');">
+		
+		<rich:toolTip followMouse="true"
+			direction="top-right"
+			mode="ajax"
+			value="Please click to parse site(s) and zipcode(s)"
+			horizontalOffset = "5"
+			verticalOffset="5">
+		</rich:toolTip>
+	
+	</a4j:commandButton>
+	<a4j:commandButton action="#{hVACCalculatorBacking.clearCustomHVACSites()}"
+		value="Clear Site Utility(s)"
+		reRender="customhvaczuitm"
+		onclick="javascript:Richfaces.showModalPanel('prcprg');"
+		oncomplete="javascript:Richfaces.hideModalPanel('prcprg');">
+		
+		<rich:toolTip followMouse="true"
+			direction="top-right"
+			mode="ajax"
+			value="Please click to clear site(s) and zipcode(s)"
+			horizontalOffset = "5"
+			verticalOffset="5">
+		</rich:toolTip>
+		
+	</a4j:commandButton>
+	</h:panelGrid>
+	<rich:spacer height = "15"></rich:spacer>
+	
+	<div style="height:300px;width:495px;overflow:auto;">
+	
+	<rich:dataTable value="#{zipUtilitiesManager.hvaccustomzulist}"
+		var="customhvaczuitems"
+		id="customhvaczuitm"
+		binding="#{zipUtilitiesManager.hvaccustomzulistdatatable}"
+		width="480px">
+		
+		<f:facet name="header">
+			<h:outputText value="Site(s) and Utility(s)" />
+		</f:facet>
+		
+		<rich:column width = "80">
+			<f:facet name="header">
+				<h:outputText value="Site" />
+			</f:facet>
+			<h:outputText value="#{customhvaczuitems.sitenum}" />
+		</rich:column>
+		
+		<rich:column width="80">
+			<f:facet name="header">
+				<h:outputText value="Zip Code" />
+			</f:facet>
+			<h:outputText value="#{customhvaczuitems.zipcode}" style="width:100px;"/>
+		</rich:column>
+		
+		<rich:column width="290">
+			<f:facet name="header">
+				<h:outputText value="Utility" />
+			</f:facet>
+			
+			<rich:comboBox value="#{customhvaczuitems.plattsutilityname}"
+				width="290px"
+				id="hvacutlcombo" 
+				defaultLabel="No Utility Found"
+				valueChangeListener = "#{hVACCalculatorBacking.utilitySelectionChanged}"
+				rendered = "#{customhvaczuitems.numofutility gt 1}">
+				<f:selectItems value="#{customhvaczuitems.utilitybyzipcombo}"
+					var="customutlbyzipitems"/>
+				<a4j:support event="onchange"></a4j:support>
+			</rich:comboBox>
+			
+			<h:outputText value="#{customhvaczuitems.plattsutilityname}" 
+				rendered="#{customhvaczuitems.numofutility lt 2}" style="width:290px;"/>
+		</rich:column>
+	</rich:dataTable>
+	</div>
+</td>
+</tr>
+</table>
+
+<rich:dataTable value = "#{hVACCalcResultManger.customhvacoutput}"
+	var = "customhvacoutitems"
+	id = "customhvacoutresult"
+	onRowMouseOver="this.style.backgroundColor='evenrowclass'"
+	onRowMouseOut="this.style.backgroundColor='evenrowclass'"
+	styleClass="tableclass"
+	rowClasses="evenrowclass"
+	columnClasses="tablecolumnleftalignclass" 
+	headerClass="tableheaderleftalignclass">
+	
+	<f:facet name="header">
+		<h:outputText value="Result" 
+			id="customhvaccalctableheader" />
+	</f:facet>
+	
+	<rich:column style="padding:7px;">
+		<f:facet name="header">
+			<h:panelGrid columns="1">
+			<a4j:commandButton value="Expand All" 
+				image = "#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/images/plus.gif"
+				rendered="#{not hVACCalcResultManger.expandallcustomdetails}"
+				reRender="customhvacoutresult"
+				style="height:11px;width:11px;"
+				action="#{hVACCalculatorBacking.expandAllCustomHvacOutputDetail()}">	
+			</a4j:commandButton>
+			<a4j:commandButton value="Collapse All"
+				image = "#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/images/minus.gif"
+				rendered="#{hVACCalcResultManger.expandallcustomdetails}"
+				reRender="customhvacoutresult"
+				style="height:11px;width:11px;"
+				action="#{hVACCalculatorBacking.collapseAllCustomHvacOutputDetail()}">
+					
+			</a4j:commandButton>
+			</h:panelGrid>
+		</f:facet>
+		<a4j:commandButton value="Expand"
+			image = "#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/images/plus.gif"
+			rendered="#{not customhvacoutitems.showdetail and customhvacoutitems.hvacdtl.size() > 0}" 
+			style="height:11px;width:11px;"
+			reRender="customhvacoutresult,customhvacdtlsubtbl"
+			action="#{hVACCalculatorBacking.generateCustomHVACRebateTableHeader()}">
+			
+			<a4j:actionparam name="Expand" value="true" 
+					assignTo = "#{customhvacoutitems.showdetail}" />
+					
+		</a4j:commandButton>
+		<a4j:commandButton value="Collapse"
+			image = "#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/images/minus.gif"
+			rendered = "#{customhvacoutitems.showdetail and customhvacoutitems.hvacdtl.size() > 0}"
+			style="height:11px;width:11px;"
+			reRender="customhvacoutresult,customhvacdtlsubtbl"
+			action="#{hVACCalculatorBacking.generateCustomHVACRebateTableHeader()}">
+			
+			<a4j:actionparam name="expand" value="false" 
+					assignTo = "#{customhvacoutitems.showdetail}" />
+					
+		</a4j:commandButton>
+	</rich:column>
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Site" />
+		</f:facet>
+		<h:outputText value="#{customhvacoutitems.sitenum}" />
+	</rich:column>
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Zip Code" />
+		</f:facet>
+		<h:outputText value="#{customhvacoutitems.zipcodes}" />
+	</rich:column>
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Utility" />
+		</f:facet>
+		<h:outputText value="#{customhvacoutitems.utilityname}" />
+	</rich:column>
+
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Choice" />
+		</f:facet>
+		<h:outputText value="#{customhvacoutitems.hasaltutl eq 'Y' ? 'Yes' : 'No'}" />
+	</rich:column>
+	
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Rebate Program" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.rebatorname}" />
+	</rich:column>
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Rebate ALT" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.hasaltrebateprog}" />
+	</rich:column>
+	 
+	 
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Program" />
+		</f:facet>
+		<h:outputText value="#{hvacoutitems.isprogram eq 'T' ? 'Yes' : 'No'}" />
+	</rich:column>
+	
+
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Qualify Unit(s)" />
+		</f:facet>
+		<h:outputText value="#{customhvacoutitems.numofqualify}">
+			<f:convertNumber pattern="#,##0"/>
+		</h:outputText>
+	</rich:column>
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Rebate Amount" />
+		</f:facet>
+		<h:outputText value="#{customhvacoutitems.qualifyamount}">
+			<f:convertNumber pattern="$#,##0.00"/>
+		</h:outputText>
+	</rich:column>
+	
+	<rich:column>
+		<f:facet name="header">
+			<h:outputText value="Comments" />
+		</f:facet>
+		<h:outputText value="" />
+	</rich:column>
+	
+	<rich:subTable value="#{customhvacoutitems.hvacdtl}"
+		var="customhvacoutitemsdtl"
+		id="customhvacdtlsubtbl"
+		rendered="#{customhvacoutitems.showdetail}"
+		onRowMouseOver="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+		
+		<rich:column colspan = "2">
+			 
+			<f:facet name="header">
+				<h:outputText value=" " />
+			</f:facet>
+			
+			<h:outputText value=" " />
+		</rich:column>
+		
+		
+		<rich:column>
+			
+			<f:facet name="header">
+				<h:outputText value="Model Number" />
+			</f:facet>
+			
+			<h:outputText value="#{customhvacoutitemsdtl.modelnumber}" />
+		</rich:column>
+		 
+		 
+		<rich:column colspan = "3">
+			
+			<f:facet name="header">
+				<h:outputText value="Tons" />
+			</f:facet>
+			
+			<h:outputText value="#{customhvacoutitemsdtl.equipmenttype} #{customhvacoutitemsdtl.subequipmenttype} #{customhvacoutitemsdtl.tonnage} ton(s) #{customhvacoutitemsdtl.flv1} #{customhvacoutitemsdtl.flv1uom}" />
+		</rich:column>
+		
+		
+		<rich:column>
+			
+			<f:facet name="header">
+				<h:outputText value="EER" />
+			</f:facet>
+		
+			<h:outputText value="#{hvacoutitemsdtl.flv1} EER" />
+		</rich:column>
+			
+		
+		<rich:column>
+			
+			<f:facet name="header">
+				<h:outputText value="IEER" />
+			</f:facet>
+			 
+			<h:outputText value="#{hvacoutitemsdtl.iplv1} IEER" />
+		</rich:column>
+		
+		<rich:column>
+			
+			<f:facet name="header">
+				<h:outputText value="Is Qualify" />
+			</f:facet>
+			
+			<h:outputText value="#{hvacoutitemsdtl.isqualifying}" />
+		</rich:column>
+		 
+		
+		<rich:column>
+			<h:outputText value="#{customhvacoutitemsdtl.qualifyquantity}" >
+				<f:convertNumber pattern="#,##0"/>
+			</h:outputText>
+		</rich:column>
+		 
+		<rich:column>
+			
+			<f:facet name="header">
+				<h:outputText value="Rebate Amount" />
+			</f:facet>
+			
+			<h:outputText value="#{customhvacoutitemsdtl.qualifyrebateamt}">
+				<f:convertNumber pattern="$#,##0.00"/>
+			</h:outputText>
+		</rich:column>
+		
+		<rich:column colspan="1">
+			
+			<f:facet name="header">
+				<h:outputText value="Comments" />
+			</f:facet>
+			 
+			<h:outputText value="#{customhvacoutitemsdtl.comments}" />
+		</rich:column>
+		
+	</rich:subTable>
+
+</rich:dataTable>
+
+<rich:spacer height="10"></rich:spacer>
+<h:panelGrid>
+<h:outputText value="#{hvaccalcmsg.disclamerparagraph1}" styleClass="disclaimernormaltextclass" />
+<h:outputText value=" " />
+<h:outputText value=" " />
+<h:outputText value="#{hvaccalcmsg.disclamerparagraph2}" styleClass="disclaimernormaltextclass" />
+</h:panelGrid>
+<rich:spacer height="10"></rich:spacer>
+
+</rich:tab>
+ -->
+ 
+ 	
+<rich:tab id="oemcal" rendered="false">
+	<f:facet name="label">
+		<h:outputText styleClass="tabheader" value="All Equipment" />
+	</f:facet>
+
+
+<h:panelGrid columns="2" 
+	columnClasses="panelgridtopalignclass,
+		panelgridtopalignclass,
+		panelgridtopalignclass,
+		panelgridtopalignclass,
+		panelgridtopalignclass,
+		panelgridtopalignclass" 
+		width="500">
+		
+<!-- 	
+	<rich:extendedDataTable value="#{oEMManager.OEMDataModel}"
+		var="oemitems"
+		width="300px"
+		height="150px"
+		sortMode="#{oEMManager.sortMode}"
+		selectionMode="single"
+		selection="#{oEMManager.selectionoems}"
+		selectedClass="selectedrow"
+		id="oemsoemzip" >
+		
+		<f:facet name="header">
+			<h:outputText value="Please select OEM" />
+		</f:facet>
+		
+		<rich:column sortable="true" 
+			sortBy="#{oemitems.oemname}" 
+			width="200px"
+			filterBy="#{oemitems.oemname}"
+			filterEvent="onkeyup"
+			label="OEM(s)"
+			id="oemnameoemzip">
+			
+			<f:facet name="header">
+				<h:outputText value="OEM(s)" />
+			</f:facet>
+			<h:outputText value="#{oemitems.oemname}">
+			</h:outputText>
+		</rich:column>
+		
+		<a4j:support event="onselectionchange"
+                     action="#{hVACCalculatorBacking.oemSelectionChanged()}">
+              </a4j:support>
+		
+		
+	</rich:extendedDataTable>
+ -->
+
+<h:outputText value="OEM" styleClass="normaltextclass" />
+<h:outputText value="#{userBean.loginemp.companyname}" styleClass="normaltextclass" />
+<h:outputText value="Job Name:" styleClass="normaltextclass" />
+<h:inputText value="#{hVACCalculatorBacking.projectnamealleqtab}" styleClass="normaltextclass" >
+	<f:validateLength maximum="50"></f:validateLength>
+ 	<f:validator validatorId="AlphaNumericValidator"/>
+</h:inputText>
+
+<h:outputText value="Please Enter Zip Code" styleClass="normaltextclass" />
+
+<h:inputText value="#{hVACCalculatorBacking.zipcode}" 
+	id="zipcodebyoemzip" 
+	size="8"
+	styleClass="normaltextclass">
+	
+	<a4j:support action="#{hVACCalculatorBacking.zipCodeChanged()}" 
+		event="onchange" 
+		reRender="ziutlcombo">
+	</a4j:support>
+</h:inputText>
+
+<h:outputText value="Utility" styleClass="normaltextclass" />
+
+<rich:comboBox value="#{hVACCalculatorBacking.allequipselectedutility}"
+	width="300px"
+	id="ziutlcombo"
+	defaultLabel="Please Select Utility">
+	<f:selectItems value="#{utilityManager.utilitybyzipcombo}"
+		var = "utlbyzipcombo"/>
+	<rich:toolTip followMouse="true"
+		direction="top-right"
+		mode="ajax"
+		value="Please enter 5 digit zip code to display utilities"
+		horizontalOffset = "5"
+		verticalOffset="5"
+		styleClass="newtooltip">
+	</rich:toolTip>
+</rich:comboBox>
+
+<h:outputText value="  " styleClass="normaltextclass"  />
+<h:outputText value="  " styleClass="normaltextclass" />
+
+<h:selectBooleanCheckbox label="New Construction" value="#{hVACCalculatorBacking.allequipnewconstruction}" 
+	styleClass="checkboxclass">
+	<h:outputText value="New Construction " 
+		styleClass="normaltextclass" />
+</h:selectBooleanCheckbox>
+
+<h:selectBooleanCheckbox label="Retrofit" value="#{hVACCalculatorBacking.allequipretrofit}" 
+	styleClass="checkboxclass">
+	<h:outputText value="Retrofit " 
+		styleClass="normaltextclass" />
+</h:selectBooleanCheckbox>
+
+
+</h:panelGrid>
+
+
+<rich:message for="zipcode" />
+
+<rich:spacer height="15"></rich:spacer>
+
+<h:panelGrid columns="3">
+<a4j:commandButton value = "Estimate Rebates"
+	action = "#{hVACCalculatorBacking.calculateHVACByOEMAndZip()}"
+	reRender = "equipbyoemzip,allequiperrmsg"
+	onclick="javascript:Richfaces.showModalPanel('prcprg');"
+	oncomplete="javascript:Richfaces.hideModalPanel('prcprg');">
+	
+	<rich:toolTip followMouse="true"
+		direction="top-right"
+		mode="ajax"
+		value="Please click to estimate rebates"
+		horizontalOffset="5"
+		verticalOffset="5"
+		layout="block"
+		styleClass="newtooltip">
+	</rich:toolTip>
+	
+</a4j:commandButton>
+
+<h:outputText value="#{hVACCalculatorBacking.allequipinputerrmsg}"
+	styleClass="errmsgclass" 
+	id="allequiperrmsg" />
+
+</h:panelGrid>
+
+<rich:spacer height="15"></rich:spacer>
+
+
+	<rich:extendedDataTable value="#{equipmentManager.equipmentDataModelByOEM}"
+		var="equipitemsoemzip"
+		height="400px"
+		sortMode="#{equipmentManager.sortMode}"
+		selectionMode="single"
+		selection="#{equipmentManager.selectionequipbyoem}"
+		selectedClass="selectedrow"
+		id="equipbyoemzip" >
+		
+		<f:facet name="header">
+			<h:outputText value="Equipment(s) of OEM: #{oEMManager.convertSelectedOEMToString()}" />
+		</f:facet>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.state}" 
+			width="80px"
+			filterBy="#{equipitemsoemzip.state}"
+			filterEvent="onkeyup"
+			label="State"
+			id="stateoemzip">
+			<f:facet name="header">
+				<h:outputText value="State" />
+			</f:facet>
+			<h:outputText value="#{equipitemsoemzip.state}" />
+		</rich:column>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.rebatorname}" 
+			width="150px"
+			filterBy="#{equipitemsoemzip.rebatorname}"
+			filterEvent="onkeyup"
+			label="Trade Name"
+			id="rbnameoemzip">
+			<f:facet name="header">
+				<h:outputText value="Rebator" />
+			</f:facet>
+			<h:outputText value="#{equipitemsoemzip.rebatorname}" />
+		</rich:column>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.modelnumber}" 
+			width="100px"
+			filterBy="#{equipitemsoemzip.modelnumber}"
+			filterEvent="onkeyup"
+			label="Model Number"
+			id="eqmodelnumberoemzip">
+			<f:facet name="header">
+				<h:outputText value="Model Number" />
+			</f:facet>
+			<h:outputText value="#{equipitemsoemzip.modelnumber}" />
+		</rich:column>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.modelcoilnumber}" 
+			width="100px"
+			filterBy="#{equipitemsoemzip.modelcoilnumber}"
+			filterEvent="onkeyup"
+			label="Model Coil Number"
+			id="eqmodelcoilnumberoemzip">
+			<f:facet name="header">
+				<h:outputText value="Model Coil Number" />
+			</f:facet>
+			<h:outputText value="#{equipitemsoemzip.modelcoilnumber}" />
+		</rich:column>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.coolingcapacity}" 
+			width="80px"
+			filterBy="#{equipitemsoemzip.coolingcapacity}"
+			filterEvent="onkeyup"
+			label="Cooling Capacity"
+			id="eqcoolingcapacityoemzip">
+			<f:facet name="header">
+				<h:outputText value="Cooling Capacity" />
+			</f:facet>
+			<h:outputText value="#{equipitemsoemzip.coolingcapacity}" />
+		</rich:column>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.tonage}" 
+			width="80px"
+			filterBy="#{equipitemsoemzip.tonage}"
+			filterEvent="onkeyup"
+			label="Tonage"
+			id="eqtonageoemzip">
+			<f:facet name="header">
+				<h:outputText value="Tonage" />
+			</f:facet>
+			<h:outputText value="#{equipitemsoemzip.tonage}" />
+		</rich:column>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.eer}" 
+			width="80px"
+			filterBy="#{equipitemsoemzip.eer}"
+			filterEvent="onkeyup"
+			label="EER"
+			id="eqeeroemzip">
+			<f:facet name="header">
+				<h:outputText value="EER" />
+			</f:facet>
+			<h:outputText value="#{equipitemsoemzip.eer}" />
+		</rich:column>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.ieer}" 
+			width="80px"
+			filterBy="#{equipitemsoemzip.ieer}"
+			filterEvent="onkeyup"
+			label="IEER"
+			id="eqieeroemzip">
+			<f:facet name="header">
+				<h:outputText value="IEER" />
+			</f:facet>
+			<h:outputText value="#{equipitemsoemzip.ieer}" />
+		</rich:column>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.numofunits}" 
+			width="80px"
+			label="Quantity"
+			id="quantityoemzip">
+			<f:facet name="header">
+				<h:outputText value="Quantity" />
+			</f:facet>
+			<h:inputText value="#{equipitemsoemzip.numofunits}" >
+				<a4j:support event="onkeyup" reRender="hvaccalcamt">
+				</a4j:support>
+			</h:inputText>
+		</rich:column>
+		
+		<rich:column  sortable="true" 
+			sortBy="#{equipitemsoemzip.numofunits * equipitemsoemzip.rebateamount}" 
+			width="120px"
+			label="Rebate Amount"
+			id="rbamtoemzip">
+			<f:facet name="header">
+				<h:outputText value="Rebate Amount" />
+			</f:facet>
+			<h:outputText value="#{equipitemsoemzip.numofunits * equipitemsoemzip.rebateamount}"
+				id="hvaccalcamt">
+				<f:convertNumber pattern="#,##0.00"/>
+			</h:outputText>
+		</rich:column>
+		
+	</rich:extendedDataTable>
+
+<rich:spacer height="10"></rich:spacer>
+<h:panelGrid>
+<!-- 
+<h:outputText value="#{hvaccalcmsg.disclamerparagraph1}" styleClass="disclaimernormaltextclass" />
+<h:outputText value=" " />
+<h:outputText value=" " />
+-->
+<h:outputText value="#{hvaccalcmsg.disclamerparagraph2}" styleClass="disclaimernormaltextclass" />
+</h:panelGrid>
+<rich:spacer height="10"></rich:spacer>
+</rich:tab>
+ 
+ 
+</rich:tabPanel>
+
+</h:form>
+
+</div>
+
+<rich:modalPanel id="prcprg" width="125" height="125">
+	
+	<h:graphicImage value="/images/waitAnimated.gif" />
+</rich:modalPanel>
+</ui:define>
+
+</ui:composition>
+   
+</html>

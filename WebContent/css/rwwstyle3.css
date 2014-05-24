@@ -1,0 +1,184 @@
+#header
+{
+	height:90px;
+	border-width: 1px;
+	border-color:transparent;
+	border-left:0px;
+	border-right:0px;
+	background-color: #F8F2DA;
+	margin-left:auto;
+	margin-right:auto;
+
+}
+
+#footer
+{
+	height:40px;
+	border-color: transparent;
+	border-width: 1px;
+	border-left:0px;
+	border-right:0px;
+	height:50px;
+	background-color: #F8F2DA;
+	align: center;
+	margin-left:auto;
+	margin-right:auto;
+
+}
+
+#co_logo
+{
+	width:200px;
+	height:40px;
+	background-repeat:no-repeat;
+	border-width:1px;
+	border-style:solid;
+	border-color:#000000;
+	border-top:0px;
+	margin-bottom:auto;
+	bottom:0px;
+	
+}
+
+#outer
+{
+	margin: 10px auto 10px auto;
+	width: 1100px;
+	border-style: solid;
+	border-color: #000000;
+	background-color: #F8F2DA;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	box-shadow: 10px 10px 5px #888;
+	-moz-box-shadow: 10px 10px 5px #888;
+	-webkit-box-shadow: 10px 10px 5px #888;
+	
+}
+
+#main_body
+{	
+	border-width:1px;
+	border-style:transparent;
+	height:500px;
+	background-color:#FFFFFF
+
+}
+
+#sidebar {
+	border-top: 1px solid #99CC33;
+	border-left: 1px solid #99CC33;
+	height: 300px;
+	width: 200px;
+	float: right;
+	margin-right: 5px;
+	padding: 5px 5px 5px 5px;
+}
+
+
+#contentdoc
+{
+}
+
+#leftsidebardoc
+{
+}
+
+#rightsidebardoc
+{
+}
+
+.font
+{
+	font-family: arial, calibri;
+	font-size: 12px;
+}
+
+/* the filter input boxes*/
+.rich-filter-input 
+{
+ background-color: #FFFF00;
+}
+
+.selectedrow
+{
+	background-color: #800000;
+}
+
+s
+
+.tableheaderclass
+{
+	background-color: #98FB98;
+}
+
+.tabheadercontentStyle{
+ font-size:large;
+ font-style: bold;
+}
+
+.labeltextclass
+{
+	font-size:9pt;
+	font-weight:bold;
+}
+
+.columnvalilgn
+{
+	vertical-align: top;
+}
+
+.tableheaderclass
+{
+	font-size:large;
+	background-color: #33CCFF;
+}
+
+.normaltextclass
+{
+	font-size:9pt;
+}
+
+.panelgridtopalignclass
+{
+	 vertical-align: top;
+}
+
+.errmsgclass
+{
+	font-size:9pt;
+	font-weight:bold;
+	color:#FF0000;
+}
+
+.checkboxclass
+{
+	height:15px;
+	width:15px;
+	border-style:solid;
+	border-color:Black;
+	margin:0px;
+	border-width:1px;
+	padding:0px;
+}
+
+.subtableclass
+{
+	border-style:solid;
+	border-top: 1px;
+	border-left: 1px;
+	border-bottom: 1px;
+	border-right: 1px;
+	padding: 0px 0px 0px 0px;
+}
+
+.subtableheaderclass
+{
+	background-color: #2EFE2E;
+	font-size:9pt;
+	font-weight:bold;
+}
+
+.evenrowclass
+{
+	background-color: #F3F781;
+}
